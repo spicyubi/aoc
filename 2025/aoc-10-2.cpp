@@ -135,9 +135,7 @@ auto inline unique_back_substitution(const int n, const std::vector<std::vector<
 };
 
 auto inline ceil_div(int a, int b) -> int {
-	int q = a / b;
-	if(a % b == 0){return q;};
-	return ++q;
+	return a % b == 0 ? a / b : a / b + 1;
 };
 	
 
