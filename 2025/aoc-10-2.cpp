@@ -55,11 +55,7 @@ auto inline parse(const std::string& line, std::vector<std::vector<int>>& button
 
 auto inline swap_columns(std::vector<std::vector<int>>& A, int a, int b) -> void {
 	if(a == b){return;};
-	for(int r {}; r < A.size(); ++r){
-		int tmp = A[r][a];
-		A[r][a] = A[r][b];
-		A[r][b] = tmp;
-	};
+	for(int r {}; r < A.size(); ++r){std::swap(A[r][a], A[r][b]);};
 };
 
 auto inline modified_gaussian_elimination(std::vector<std::vector<int>>& A) -> int {
