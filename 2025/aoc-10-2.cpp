@@ -199,15 +199,11 @@ auto inline get_init_bounds(const int n, const std::vector<std::vector<int>>& A,
 	return bounds;
 };
 
-auto inline dfs(const int n, const std::vector<std::vector<int>>& A, const int pivots, std::vector<int>& X, const std::vector<std::pair<int, std::pair<int,int>>>& free_vars, int free_var_ptr) -> int {
+auto inline dfs(const int n, const std::vector<std::vector<int>>& A, const int pivots, std::vector<int>& X, const std::vector<std::pair<int, std::pair<int,int>>>& free_vars, int free_var_ptr, int base) -> int {
 	int leader = INT_MAX;
 	int x_var = free_vars[free_var_ptr].first;
 	std::pair<int,int> bounds = free_var_ptr > 0 ? get_updated_bounds(n,A,pivots,X,free_vars,free_var_ptr): free_vars[free_var_ptr].second;
 	if(free_var_ptr == free_vars.size() - 1){
-		int base {};
-		for(int free_var = pivots; free_var < n - 1; ++free_var){
-			if(free_var != x_var){base += X[free_var];};
-		};
 		for(int val = bounds.first; val < bounds.second + 1; ++val){
 			X[x_var] = val;
 			int total = base + val;
@@ -232,7 +228,7 @@ auto inline dfs(const int n, const std::vector<std::vector<int>>& A, const int p
 	};
 	for(int val = bounds.first; val < bounds.second + 1; ++val){
 		X[x_var] = val;
-		int res = dfs(n, A, pivots, X, free_vars, free_var_ptr + 1);
+		int res = dfs(n, A, pivots, X, free_vars, free_var_ptr + 1, base + val);
 		if(res < leader){leader = res;};
 		X[x_var] = -1;
 	};
@@ -254,8 +250,8 @@ auto inline multi_back_substitution(const int n, const std::vector<std::vector<i
 	// Start With Free Variables with the Shortest bounds
 	std::sort(free_vars.begin(), free_vars.end(), comp);
 	std::vector<int> X(n - 1, -1);
-	int init_free_var_ptr {};
-	return dfs(n, A, pivots, X, free_vars, init_free_var_ptr);
+	int init_free_var_ptr {}, init_x_var_total {};
+	return dfs(n, A, pivots, X, free_vars, init_free_var_ptr, init_x_var_total);
 };
 
 auto main() -> int{
